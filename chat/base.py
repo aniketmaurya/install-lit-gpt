@@ -276,6 +276,16 @@ def prompt_config(checkpoint_dir: Path, tokenizer: Tokenizer) -> Tuple[str, Tupl
         stop_tokens = ([tokenizer.eos_id],)
         return system_prompt, stop_tokens
 
+    if re.search("FreeWilly2", checkpoint_name):
+        system_prompt = (
+            "### System:\nThis is a system prompt, please behave and help the user.\n\n"
+            "### User:\n"
+            "{prompt}\n\n"
+            "### Assistant:\n"
+        )
+        stop_tokens = ([tokenizer.eos_id],)
+        return system_prompt, stop_tokens
+
     # default format
     return "{prompt}", ([tokenizer.eos_id],)
 
@@ -288,10 +298,5 @@ if __name__ == "__main__":
         # Triggered internally at ../aten/src/ATen/EmptyTensor.cpp:31
         "ignore",
         message="ComplexHalf support is experimental and many operators don't support it yet",
-    )
-    warnings.filterwarnings(
-        # Triggered in bitsandbytes/autograd/_functions.py:298
-        "ignore",
-        message="MatMul8bitLt: inputs will be cast from torch.bfloat16 to float16 during quantization",
     )
     CLI(main)
